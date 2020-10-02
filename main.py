@@ -10,7 +10,6 @@ from linebot.exceptions import (
 from linebot.models import (
     FlexSendMessage, MessageEvent, TextMessage, TextSendMessage, CarouselContainer
 )
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 import configparser
 
 import os
@@ -27,13 +26,6 @@ LINE_CHANNEL_SECRET = config_file.get('LINE', 'channel_secret')
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
-
-
-#
-# template_env = Environment(
-#     loader=FileSystemLoader('templates'),
-#     autoescape=select_autoescape(['html', 'xml', 'json'])
-# )
 
 @app.route("/webhook", methods=['POST'])
 def callback():
@@ -65,52 +57,6 @@ def handle_message(event):
             TextSendMessage(text=event.message.text))
     except LineBotApiError:
         return
-
-
-#
-# @handler.add(MessageEvent, message=TextMessage)
-# def handle_message(event):
-#     if event.reply_token == "00000000000000000000000000000000":
-#         return
-#
-#
-#     soup=scraping.load_site(URL)
-#     notic_list=scraping.find_by_id(soup,"notic_list")
-#     notic_students_list=scraping.find_by_id_2(soup,"notic_students_list")
-#
-#     notic_message=notic_list[0]["string"]+"\n"+notic_list[0]["href"]
-#     notic_students_message=notic_students_list[0]["string"]+"\n"+notic_students_list[0]["href"]+"\n"+notic_students_list[0]["date"]+"\n"+notic_students_list[0]["course"]
-#
-#     if(event.message.text=="学科からのお知らせ"):
-#         contents_notic = []
-#         for i in notic_list:
-#             contents_notic.append(make_template.notic_flex(i['string'], i['date'], i['href']))
-#
-#         line_bot_api.reply_message(
-#             event.reply_token,
-#             FlexSendMessage(
-#                 alt_text="学科生の方へのお知らせ",
-#                 contents={"type": "carousel", "contents": contents_notic}
-#                 # contents=make_template.notic_flex(['string'], i['date'], i['href'])
-#             )
-#         )
-#
-#     # les = "les"
-#     # template = template_env.get_template('temp.json')
-#     # data = template.render(dict(items=les))
-#
-#     if(event.message.text=="学科生の方へのお知らせ"):
-#         contents_students = []
-#         for i in notic_students_list:
-#             contents_students.append(make_template.students_flex(i['string'], i['course'], i['date'], i['href']))
-#
-#         line_bot_api.reply_message(
-#             event.reply_token,
-#             FlexSendMessage(
-#                 alt_text="学科生の方へのお知らせ",
-#                 contents={"type":"carousel","contents":contents_students}
-#             )
-#         )
 
 @app.route('/hello')
 def hello_world():
