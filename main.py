@@ -11,15 +11,19 @@ from linebot.models import (
     FlexSendMessage, MessageEvent, TextMessage, TextSendMessage, CarouselContainer
 )
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import configparser
 
 import os
 import json
 
 app = Flask(__name__)
 
+config_file = configparser.ConfigParser()
+config_file.read('./config.ini')
+
 # 環境変数取得
-LINE_CHANNEL_ACCESS_TOKEN = "ehF0YkL5idDvCzUiGTvqLfhbotMfetFL5jzFFK7VREjANv7N3zcASy7r6g1yECHDKba3LF/ZkYnizQUsJDVlT8t7d52EVg+2nfxcrIym50/6pxT5V1npQrx35+7Nu/qplitKaHWN5Hs6BbC3s6C/pAdB04t89/1O/w1cDnyilFU="
-LINE_CHANNEL_SECRET = "2ea8ab957868172d5b299be619cb4c14"
+LINE_CHANNEL_ACCESS_TOKEN = config_file.get('LINE', 'channel_access_token')
+LINE_CHANNEL_SECRET = config_file.get('LINE', 'channel_secret')
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
