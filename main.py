@@ -47,24 +47,66 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    class_urls = {'レジリエンスコロキウム': 'https://sites.google.com/g.ecc.u-tokyo.ac.jp/sdm-rc20/?pli=1&authuser=1', 
-    'システム設計科学': 'https://zoom.us/j/92647589066?pwd=V05BcnpiZkh2WVlZK2N2dGZUOWFoZz09',
-    'システム制御工学': 'https://zoom.us/j/98093061286',
-    '量子力学': 'https://zoom.us/j/96396500440?pwd=akxkWm5MV0NBbjZGb1Z6VWdTMUd4QT09',
-    '先端コンピューティング': 'https://zoom.us/j/8062021054?pwd=L0dnRGJUa1hMa2RwdFJsd29lTEpzQT09',
-    '微分方程式の解法と可視化': 'https://zoom.us/j/91850471543?pwd=M1pLcVBvR01sczFDMHU3cEZuVVJVUT09',
-    '電磁エネルギー基礎': 'https://zoom.us/j/91882363434?pwd=Z1NzclFvR3VvS01uUEtNeGpMTGtxdz09',
-    '形状モデリングと可視化': 'https://zoom.us/j/99188357630?pwd=Q2xxQ0V5QnRUbmhlKzRWZEtnVzlzZz09',
-    '有限要素法と構造解析': 'https://zoom.us/j/95969192926?pwd=ckdmc05mdndxYml3NjFBZzROaUxrdz09',
-    '数理演習3B': 'https://zoom.us/j/93081493741?pwd=QjBTRkZ6MWlWTC9RdlpiOXNMNmJvdz09'
+    classes = {
+        'レジリエンスコロキウム': {
+            'url':'https://sites.google.com/g.ecc.u-tokyo.ac.jp/sdm-rc20/?pli=1&authuser=1',
+            'evaluation_method':'2週間後までレポート',
+            'extra':'オムニバス'
+        }, 
+        'システム設計科学': {
+            'url':'https://zoom.us/j/92647589066?pwd=V05BcnpiZkh2WVlZK2N2dGZUOWFoZz09',
+            'evaluation_method':'出席、レポート',
+            'extra':'DJ'
+        },
+        'システム制御工学': {
+            'url':'https://zoom.us/j/98093061286',
+            'evaluation_method':'講義への態度（不定期に実施する講義内の演習課題など）、期末試験を40-60%程度',
+            'extra':''
+        },
+        '量子力学': {
+            'url':'https://zoom.us/j/96396500440?pwd=akxkWm5MV0NBbjZGb1Z6VWdTMUd4QT09',
+            'evaluation_method':'出席、レポート',
+            'extra':'クソムズイ'
+        },
+        '先端コンピューティング': {
+            'url':'https://zoom.us/j/8062021054?pwd=L0dnRGJUa1hMa2RwdFJsd29lTEpzQT09',
+            'evaluation_method':'出席、レポート',
+            'extra':'材料力学'
+        },
+        '微分方程式の解法と可視化': {
+            'url':'https://zoom.us/j/91850471543?pwd=M1pLcVBvR01sczFDMHU3cEZuVVJVUT09',
+            'evaluation_method':'出席、レポート、期末試験',
+            'extra':''
+        },
+        '電磁エネルギー基礎': {
+            'url':'https://zoom.us/j/91882363434?pwd=Z1NzclFvR3VvS01uUEtNeGpMTGtxdz09',
+            'evaluation_method':'主にレポート、期末試験',
+            'extra':'講義・演習の出席、演習での割り当て問題の解答、理解度チェックテスト成績も適切に加味'
+        },
+        '形状モデリングと可視化': {
+            'url':'https://zoom.us/j/99188357630?pwd=Q2xxQ0V5QnRUbmhlKzRWZEtnVzlzZz09',
+            'evaluation_method':'レポート',
+            'extra':'レポートはメール提出'
+        },
+        '有限要素法と構造解析': {
+            'url':'https://zoom.us/j/95969192926?pwd=ckdmc05mdndxYml3NjFBZzROaUxrdz09',
+            'evaluation_method':'授業内の理解度確認テストとレポート',
+            'extra':''
+        },
+        '数理演習3B': {
+            'url':'https://zoom.us/j/93081493741?pwd=QjBTRkZ6MWlWTC9RdlpiOXNMNmJvdz09',
+            'evaluation_method':'出席とレポートと中間試験',
+            'extra':'複素数'
+        }
     }
+    
 
-    for k, v in class_urls.items():
+    for k, v in classes.items():
         if event.message.text == k:
             try:
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text=v))
+                    TextSendMessage(text=f'URL:{v["url"]}\n評価方法:{v["evaluation_method"]}\n備考:{v["extra"]}'))
             except LineBotApiError:
                 return
 
