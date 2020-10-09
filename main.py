@@ -47,16 +47,28 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    # classes = [
-    #     {"class_name":"基礎プロジェクト","zoom_url":"https://zoom.us~",}
-    # ]
+    class_urls = {'レジリエンスコロキウム': 'https://sites.google.com/g.ecc.u-tokyo.ac.jp/sdm-rc20/?pli=1&authuser=1', 
+    'システム設計科学': 'https://zoom.us/j/92647589066?pwd=V05BcnpiZkh2WVlZK2N2dGZUOWFoZz09',
+    'システム制御工学': 'https://zoom.us/j/98093061286',
+    '量子力学': 'https://zoom.us/j/96396500440?pwd=akxkWm5MV0NBbjZGb1Z6VWdTMUd4QT09',
+    '先端コンピューティング': 'https://zoom.us/j/8062021054?pwd=L0dnRGJUa1hMa2RwdFJsd29lTEpzQT09',
+    '微分方程式の解法と可視化': 'https://zoom.us/j/91850471543?pwd=M1pLcVBvR01sczFDMHU3cEZuVVJVUT09',
+    '電磁エネルギー基礎': 'https://zoom.us/j/91882363434?pwd=Z1NzclFvR3VvS01uUEtNeGpMTGtxdz09',
+    '形状モデリングと可視化': 'https://zoom.us/j/99188357630?pwd=Q2xxQ0V5QnRUbmhlKzRWZEtnVzlzZz09',
+    '有限要素法と構造解析': 'https://zoom.us/j/95969192926?pwd=ckdmc05mdndxYml3NjFBZzROaUxrdz09',
+    '数理演習3B': 'https://zoom.us/j/93081493741?pwd=QjBTRkZ6MWlWTC9RdlpiOXNMNmJvdz09'
+    }
 
-    try:
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=event.message.text))
-    except LineBotApiError:
-        return
+    for k, v in class_urls.items():
+        if event.message.text == k:
+            try:
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text=v))
+            except LineBotApiError:
+                return
+
+    
 
 @app.route('/hello')
 def hello_world():
