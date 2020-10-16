@@ -8,12 +8,11 @@ from linebot.exceptions import (
     LineBotApiError
 )
 from linebot.models import (
-    FlexSendMessage, MessageEvent, TextMessage, TextSendMessage, CarouselContainer
+    FlexSendMessage, MessageEvent, TextMessage,
 )
 import configparser
 
 import os
-import json
 
 app = Flask(__name__)
 
@@ -99,25 +98,123 @@ def handle_message(event):
             'extra':'複素数'
         }
     }
-    
+
+    if event.message.text == "授業一覧":
+        message = ""
+        for k, v in classes.items():
+            message += f'{k}\n'
+        try:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextMessage(text=message))
+            return
+        except LineBotApiError:
+            return
 
     for k, v in classes.items():
         if event.message.text == k:
+            flex_message = {
+              "type": "flex",
+              "altText": "Flex Message",
+              "contents": {
+                  "type": "bubble",
+                  "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": k,
+                        "weight": "bold",
+                        "size": "md"
+                      },
+                      {
+                        "type": "box",
+                        "layout": "vertical",
+                        "margin": "lg",
+                        "spacing": "sm",
+                        "contents": [
+                          {
+                            "type": "box",
+                            "layout": "baseline",
+                            "spacing": "sm",
+                            "contents": [
+                              {
+                                "type": "text",
+                                "text": "評価方法",
+                                "color": "#aaaaaa",
+                                "size": "sm",
+                                "flex": 2
+                              },
+                              {
+                                "type": "text",
+                                "text": v["evaluation_method"],
+                                "wrap": True,
+                                "color": "#666666",
+                                "size": "sm",
+                                "flex": 5
+                              }
+                            ]
+                          },
+                          {
+                            "type": "box",
+                            "layout": "baseline",
+                            "spacing": "sm",
+                            "contents": [
+                              {
+                                "type": "text",
+                                "text": "備考",
+                                "color": "#aaaaaa",
+                                "size": "sm",
+                                "flex": 2
+                              },
+                              {
+                                "type": "text",
+                                "text": v["extra"],
+                                "wrap": True,
+                                "color": "#666666",
+                                "size": "sm",
+                                "flex": 5
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "footer": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "spacing": "sm",
+                    "contents": [
+                      {
+                        "type": "button",
+                        "style": "link",
+                        "height": "sm",
+                        "action": {
+                          "type": "uri",
+                          "label": "Zoom URL",
+                          "uri": v["url"]
+                        }
+                      },
+                      {
+                        "type": "spacer",
+                        "size": "sm"
+                      }
+                    ],
+                    "flex": 0
+                  }
+                }
+            }
+
             try:
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text=f'URL:{v["url"]}\n評価方法:{v["evaluation_method"]}\n備考:{v["extra"]}'))
+                    FlexSendMessage.new_from_json_dict(flex_message))
+                return
             except LineBotApiError:
                 return
 
-    
-
-@app.route('/hello')
-def hello_world():
-    return 'Hello, World!'
-
-
 if __name__ == "__main__":
-    #    app.run()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
