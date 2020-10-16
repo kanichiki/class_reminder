@@ -20,8 +20,8 @@ config_file = configparser.ConfigParser()
 config_file.read('./config.ini')
 
 # 環境変数取得
-LINE_CHANNEL_ACCESS_TOKEN = config_file.get('LINE', 'channel_access_token')
-LINE_CHANNEL_SECRET = config_file.get('LINE', 'channel_secret')
+LINE_CHANNEL_ACCESS_TOKEN = os.environ['channel_access_token']
+LINE_CHANNEL_SECRET = os.environ['channel_secret']
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
